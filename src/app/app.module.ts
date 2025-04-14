@@ -15,6 +15,7 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { APP_ROUTE_PROVIDER } from './route.provider';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,6 +26,7 @@ import { APP_ROUTE_PROVIDER } from './route.provider';
     ThemeSharedModule,
     CoreModule,
     ThemeBasicModule,
+    SharedModule
   ],
   providers: [
     APP_ROUTE_PROVIDER,

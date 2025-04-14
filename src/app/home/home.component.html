@@ -1,4 +1,15 @@
-<div class="row mb-3">
+@if(!hasLoggedIn){
+<h3>Welcome</h3>
+<p class="lead text-muted mb-2">
+  {{ '::LongWelcomeMessage' | abpLocalization }}
+</p>
+<a (click)="login()" class="px-4 btn btn-primary mb-4" role="button">
+  <i class="fa fa-sign-in"></i>
+  {{ 'AbpAccount::Login' | abpLocalization }}
+</a>
+}
+首页
+<!-- <div class="row mb-3">
   <div class="col-xl-6 col-12 d-flex">
     <div class="card h-lg-100 w-100 overflow-hidden">
       <div class="card-body">
@@ -323,4 +334,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

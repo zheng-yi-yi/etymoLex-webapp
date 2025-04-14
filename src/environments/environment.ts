@@ -15,7 +15,7 @@ export const environment = {
   production: false,
   application: {
     baseUrl,
-    name: 'Academy',
+    name: '词源智库',
   },
   oAuthConfig,
   apis: {
@@ -27,5 +27,8 @@ export const environment = {
       url: oAuthConfig.issuer,
       rootNamespace: 'AbpAccountPublic',
     },
+  },
+  localization: {
+    defaultResourceName: "Academy",
   },
 } as Environment;
