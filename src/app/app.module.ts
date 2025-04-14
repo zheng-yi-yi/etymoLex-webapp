@@ -16,7 +16,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { APP_ROUTE_PROVIDER } from './route.provider';
 import { SharedModule } from './shared/shared.module';
-import { ModelingModule } from './modeling/modeling.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,8 +26,7 @@ import { ModelingModule } from './modeling/modeling.module';
     ThemeSharedModule,
     CoreModule,
     ThemeBasicModule,
-    SharedModule,
-    ModelingModule
+    SharedModule
   ],
   providers: [
     APP_ROUTE_PROVIDER,

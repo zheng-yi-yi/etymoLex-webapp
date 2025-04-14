@@ -38,5 +38,19 @@ function configureRoutes() {
     //   order: 4,
     //   layout: eLayoutType.application
     // },
+    {
+      name: "词根词缀",
+      path: "/morpheme-management",
+      iconClass: 'fas fa-sitemap',
+      order: 5,
+      layout: eLayoutType.application
+    },
+    {
+      name: "单词管理",
+      path: "/word-management",
+      iconClass: 'fas fa-book',
+      order: 6,
+      layout: eLayoutType.application
+    },
   ]);
 }

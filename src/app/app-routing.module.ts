@@ -26,10 +26,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
+  { path: 'morpheme-management', loadChildren: () => import('./morphemes/morphemes.module').then(m => m.MorphemesModule) },
+  { path: 'word-management', loadChildren: () => import('./words/words.module').then(m => m.WordsModule) },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {})],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
