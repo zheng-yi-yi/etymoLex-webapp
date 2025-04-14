@@ -1,9 +1,9 @@
 import { saveAs } from 'file-saver';
-import { AppUtils } from './utils/app.utils';
+import { AppUtils } from './app.utils';
 import { ConfigStateService, ListService, PagedResultDto, Rest, RestService } from '@abp/ng.core';
 import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
 import { inject } from '@angular/core';
-import { FileType } from './utils/file-type.enum';
+import { FileType } from '../enums/file-type.enum';
 import { ImportResultDto, ModelingHistoryDto, ModelingInputDto } from '@proxy/dtos';
 import { OverridingMode } from '@proxy/enums';
 

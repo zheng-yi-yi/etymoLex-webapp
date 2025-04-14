@@ -1,5 +1,4 @@
-import { FileType } from './file-type.enum';
-const treeNodeChildMap = { Area: 'cells', Cell: 'workCenters' };
+import { FileType } from '../enums/file-type.enum';
 
 export class AppUtils {
   static getFileSuffix(fileType: FileType) {
@@ -326,16 +325,6 @@ export class AppUtils {
     }
 
     return importItem;
-  }
-
-  static initTreeData(data: any) {
-    for (let item of data) {
-      const children = treeNodeChildMap[item.type] || 'children';
-      if (item[children] && Array.isArray(item[children])) {
-        item.children = item[children];
-        this.initTreeData(item.children);
-      }
-    }
   }
 
   static hasCheckedDataTier(data: any) {
