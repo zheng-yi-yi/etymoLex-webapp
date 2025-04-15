@@ -1,4 +1,5 @@
-import type { CreateUpdateMorphemeDto, ImportResultDto, ModelingHistoryDto, ModelingInputDto, MorphemeDto, MorphemeGetListInput } from './dtos/models';
+import type { ImportResultDto, ModelingHistoryDto, ModelingInputDto } from './dtos/models';
+import type { CreateUpdateMorphemeDto, ExportMorphemeDto, MorphemeDto, MorphemeGetListInput } from './dtos/morpheme/models';
 import type { FileType } from './enums/file-type.enum';
 import type { OverridingMode } from './enums/overriding-mode.enum';
 import { RestService, Rest } from '@abp/ng.core';
@@ -91,7 +92,7 @@ export class MorphemeService {
     { apiName: this.apiName,...config });
   
 
-  getExistInstances = (entities: CreateUpdateMorphemeDto[], config?: Partial<Rest.Config>) =>
+  getExistInstances = (entities: ExportMorphemeDto[], config?: Partial<Rest.Config>) =>
     this.restService.request<any, MorphemeDto[]>({
       method: 'POST',
       url: '/api/app/morpheme/get-exist-instances',
@@ -118,7 +119,7 @@ export class MorphemeService {
     { apiName: this.apiName,...config });
   
 
-  importByDtosAndMode = (dtos: CreateUpdateMorphemeDto[], mode: OverridingMode, config?: Partial<Rest.Config>) =>
+  importByDtosAndMode = (dtos: ExportMorphemeDto[], mode: OverridingMode, config?: Partial<Rest.Config>) =>
     this.restService.request<any, ImportResultDto>({
       method: 'POST',
       url: '/api/app/morpheme/import',

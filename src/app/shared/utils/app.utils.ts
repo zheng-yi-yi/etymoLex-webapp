@@ -458,4 +458,32 @@ export class AppUtils {
       return user.userName;
     }
   }
+
+  static base64ToBlob(base64: string, fileName: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const mimeType = fileName.endsWith('.xlsx') ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/json';
+    return new Blob([byteArray], { type: mimeType });
+  }
+
+  static blobToJson(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const jsonString = reader.result as string;
+          const jsonObject = JSON.parse(jsonString);
+          resolve(JSON.stringify(jsonObject, null, 2));
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.onerror = () => reject(reader.error);
+      reader.readAsText(blob, 'utf-8');
+    });
+  }
 }

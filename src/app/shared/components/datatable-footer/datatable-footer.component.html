@@ -1,0 +1,25 @@
+<div class="datatable-footer-inner" [ngClass]="{ 'selected-count': selectedMessage }" [style.height.px]="footerHeight">
+  <div class="page-count d-flex align-items-center">
+    <span *ngIf="selectedMessage"> {{ selectedCount?.toLocaleString() + " selected / " + rowCount?.toLocaleString() +
+      " total"}}
+    </span>
+    <div class="ms-2" *ngIf="showPageSizeSelect">
+      <select class="form-select form-select-sm" style="padding-right: 35px;" [(ngModel)]="maxResultCount"
+        (ngModelChange)="maxResultCountChange()">
+        <option value="10">10 / Page</option>
+        <option value="20">20 / Page</option>
+        <option value="30">30 / Page</option>
+        <option value="50">50 / Page</option>
+        <option value="100">100 / Page</option>
+        <option value="200">200 / Page</option>
+        <option value="500">500 / Page</option>
+        <option value="1000">1000 / Page</option>
+      </select>
+    </div>
+  </div>
+
+  <datatable-pager [pagerLeftArrowIcon]="pagerLeftArrowIcon" [pagerRightArrowIcon]="pagerRightArrowIcon"
+    [pagerPreviousIcon]="pagerPreviousIcon" [pagerNextIcon]="pagerNextIcon" [page]="curPage" [size]="pageSize"
+    [count]="rowCount" [hidden]="!isVisible" (change)="pageChange($event)">
+  </datatable-pager>
+</div>

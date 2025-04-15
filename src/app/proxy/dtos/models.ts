@@ -1,25 +1,4 @@
-import type { MorphemeType } from '../enums/morpheme-type.enum';
 import type { ExtensibleAuditedEntityDto, PagedAndSortedResultRequestDto } from '@abp/ng.core';
-
-export interface CreateUpdateMorphemeDto extends CreateUpdateNameObjectDto {
-  value?: string;
-  type?: MorphemeType;
-  originLanguage?: string;
-  meaning?: string;
-}
-
-export interface CreateUpdateNameObjectDto {
-  name: string;
-  description?: string;
-  tenantId?: string;
-  tenantName?: string;
-  displayName?: string;
-  extraProperties: Record<string, object>;
-}
-
-export interface GetNameObjectInput extends PagedAndSortedResultRequestDto {
-  filter?: string;
-}
 
 export interface ImportResultDto {
   status: boolean;
@@ -52,18 +31,17 @@ export interface ModelingPropertyDto {
   newValue?: string;
 }
 
-export interface MorphemeDto extends NameObjectDto<string> {
-  value?: string;
-  type?: MorphemeType;
-  originLanguage?: string;
-  meaning?: string;
+export interface CreateUpdateNameObjectDto {
+  name: string;
+  description?: string;
+  tenantId?: string;
+  tenantName?: string;
+  displayName?: string;
+  extraProperties: Record<string, object>;
 }
 
-export interface MorphemeGetListInput extends GetNameObjectInput {
-  value?: string;
-  type?: MorphemeType;
-  originLanguage?: string;
-  meaning?: string;
+export interface GetNameObjectInput extends PagedAndSortedResultRequestDto {
+  filter?: string;
 }
 
 export interface NameObjectDto<Tkey> extends ExtensibleAuditedEntityDto<Tkey> {

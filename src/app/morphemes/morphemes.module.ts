@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { MorphemesRoutingModule } from './morphemes-routing.module';
 import { MorphemesComponent } from './morphemes.component';
+import { SharedModule } from '../shared/shared.module';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -10,8 +12,10 @@ import { MorphemesComponent } from './morphemes.component';
     MorphemesComponent
   ],
   imports: [
-    CommonModule,
-    MorphemesRoutingModule
+    SharedModule,
+    MorphemesRoutingModule,
+    NgSelectModule,
+    NgbNavModule
   ]
 })
 export class MorphemesModule { }

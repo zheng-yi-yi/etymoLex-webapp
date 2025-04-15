@@ -1,1 +1,258 @@
-<p>morphemes works!</p>
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            词根词缀管理
+        </h2>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="d-flex align-items-center">
+                    <span class="d-flex align-items-center text-nowrap me-1">类型：</span>
+                    <select class="form-select me-2" [(ngModel)]="searchFilterType" (change)="onFilterTypeChange()"
+                        style="width: 150px;padding: 0.15rem 2.25rem 0.15rem .75rem;">
+                        <option value="">所有类型</option>
+                        <option *ngFor="let type of morphemeTypes" [value]="type.value">
+                            {{ type.label }}
+                        </option>
+                    </select>
+                    <span class="d-flex align-items-center text-nowrap me-1">搜索：</span>
+                    <div class="input-group me-2">
+                        <input type="text" class="form-control" placeholder="search"
+                            (input)="search($event.target.value)" style="padding: 0.15rem 0.875rem;" />
+                        <button class="btn btn-primary" type="button" (click)="search($event.target.value)">
+                            <i class="fa fa-search me-2 ms-2"></i>
+                        </button>
+                    </div>
+                    <div *abpPermission="'Morpheme.Create'">
+                        <button id="create" class="btn btn-primary text-nowrap me-2" type="button" (click)="create()">
+                            <i class="fa fa-plus me-1"></i>
+                            <span>新建数据</span>
+                        </button>
+                    </div>
+                    <div *abpPermission="'Morpheme.Delete'">
+                        <button id="delete" class="btn btn-danger text-nowrap me-2" type="button"
+                            (click)="multiDelete()" [disabled]="selected.length === 0">
+                            <i class="fa fa-trash me-1"></i>
+                            <span>删除数据</span>
+                        </button>
+                    </div>
+                    <div ngbDropdown class="me-2" *abpPermission="'Morpheme.Import'">
+                        <button class="btn btn-primary dropdown-toggle" type="button" ngbDropdownToggle>
+                            <i class="fa fa-file-import me-1"></i>
+                            导入数据
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem (click)="importClick(FileType.Json)">
+                                根据 JSON 格式
+                            </button>
+                            <button ngbDropdownItem (click)="importClick(FileType.Excel)">
+                                根据 Excel 格式
+                            </button>
+                        </div>
+                    </div>
+                    <div ngbDropdown class="me-2" *abpPermission="'Morpheme.Export'">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" ngbDropdownToggle
+                            [disabled]="selected.length === 0">
+                            <i class="fa fa-download me-1"></i>
+                            导出数据
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem (click)="exportSelected(FileType.Json)">
+                                导出 JSON 文件
+                            </button>
+                            <button ngbDropdownItem (click)="exportSelected(FileType.Excel)">
+                                导出 Excel 文件
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <ngx-datatable [rows]="data.items" [count]="data.totalCount" [displayCheck]="displayCheck"
+            [selectionType]="'checkbox'" [selected]="selected" [list]="list" default (select)="onSelect($event)"
+            [limit]="pageSize" scrollbarH="false">
+            <ngx-datatable-column *abpPermission="'Morpheme.Delete || Morpheme.Export'" [name]="" [maxWidth]="50"
+                [sortable]="false" [checkboxable]="true" headerCheckboxable="data.items.length">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="操作" [maxWidth]="150" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div ngbDropdown container="body" class="d-inline-block">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" ngbDropdownToggle>
+                            <i class="fa fa-cog me-1"></i>
+                            操作
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem (click)="view(row)" *abpPermission="'Morpheme'">
+                                查看
+                            </button>
+                            <button ngbDropdownItem (click)="edit(row)" *abpPermission="'Morpheme.Edit'">
+                                编辑
+                            </button>
+                            <button ngbDropdownItem (click)="delete(row)" *abpPermission="'Morpheme.Delete'">
+                                删除
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="类型" prop="type">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ getMorphemeLabel(row.type) }}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="值" prop="value"></ngx-datatable-column>
+            <ngx-datatable-column name="含义" prop="meaning"></ngx-datatable-column>
+            <ngx-datatable-column name="来源" prop="originLanguage"></ngx-datatable-column>
+            <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                    let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset">
+                    <app-datatable-footer [rowCount]="rowCount" [pageSize]="pageSize" [offset]="offset" [list]="list"
+                        [selectedCount]="selected.length" (page)="pageChange($event)">
+                    </app-datatable-footer>
+                </ng-template>
+            </ngx-datatable-footer>
+        </ngx-datatable>
+    </div>
+</div>
+
+<abp-modal [(visible)]="isModalOpen" [options]="{size: 'lg'}">
+    <ng-template #abpHeader>
+        <h2>{{ currentDto.id ? '编辑词根词缀' : '新建词根词缀' }}</h2>
+    </ng-template>
+
+    <ng-template #abpBody>
+        <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="row mb-2">
+                <div class="col">
+                    <label class="mb-1" for="morphemes-type">类型</label><span>*</span>
+                    <select id="morphemes-type" class="form-select" formControlName="type">
+                        <option *ngFor="let type of morphemeTypes" [value]="type.value">
+                            {{ type.label }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="mb-1" for="morphemes-value">
+                        值
+                    </label><span>*</span>
+                    <input type="text" id="morphemes-value" class="form-control" formControlName="value"
+                        (input)="form.controls['name'].setValue($event.target.value); form.controls['displayName'].setValue($event.target.value)" />
+                </div>
+                <div class="col">
+                    <label class="mb-1" for="morphemes-originLanguage">来源</label><span>*</span>
+                    <select id="morphemes-originLanguage" class="form-select" formControlName="originLanguage">
+                        <option *ngFor="let originLanguage of originLanguages" [value]="originLanguage">
+                            {{ originLanguage }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    <label class="mb-1" for="morphemes-meaning">含义</label><span>*</span>
+                    <textarea id="morphemes-meaning" class="form-control" formControlName="meaning"></textarea>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    <label class="mb-1" for="morphemes-description">备注</label>
+                    <textarea id="morphemes-description" class="form-control" formControlName="description"></textarea>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #abpFooter>
+        <button type="button" class="btn btn-secondary" abpClose>
+            关闭
+        </button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
+            保存
+        </button>
+    </ng-template>
+</abp-modal>
+
+<abp-modal [(visible)]="isViewModalOpen" [options]="{size: 'lg'}">
+    <ng-template #abpHeader>
+        <h2>{{ '::Morphemes:View' | abpLocalization }}</h2>
+    </ng-template>
+
+    <ng-template #abpBody>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label for="Morphemes-name">{{ "::Morphemes:Name" | abpLocalization }}</label>
+                <input type="text" id="Morphemes-name" class="form-control" [value]="currentDto.name" readonly />
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label for="Morphemes-officeLocation">{{ "::OfficeLocation" | abpLocalization }}</label>
+                <input type="text" id="Morphemes-officeLocation" class="form-control"
+                    [value]="currentDto.officeLocation" readonly />
+            </div>
+            <div class="col-md-6">
+                <label for="Morphemes-dean">{{ "::Morphemes:Dean" | abpLocalization }}</label>
+                <input type="text" id="Morphemes-dean" class="form-control" [value]="currentDto.dean" readonly />
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label for="Morphemes-contactEmail">{{ "::ContactEmail" | abpLocalization }}</label>
+                <input type="email" id="Morphemes-contactEmail" class="form-control" [value]="currentDto.contactEmail"
+                    readonly />
+            </div>
+            <div class="col-md-6">
+                <label for="Morphemes-contactPhone">{{ "::ContactPhone" | abpLocalization }}</label>
+                <input type="text" id="Morphemes-contactPhone" class="form-control" [value]="currentDto.contactPhone"
+                    readonly />
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <label for="major-description">{{ "::Description" | abpLocalization }}</label>
+                <textarea id="major-description" class="form-control" [value]="currentDto.description"
+                    readonly></textarea>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #abpFooter>
+        <button type="button" class="btn btn-secondary" abpClose>
+            {{ '::Close' | abpLocalization }}
+        </button>
+    </ng-template>
+</abp-modal>
+
+<abp-modal [(visible)]="uploadModalOpen">
+    <ng-template #abpHeader>
+        <h3>{{ importFileType === FileType.Json ? '导入数据（JSON格式）' : '导入数据（Excel格式）'}}</h3>
+    </ng-template>
+
+    <ng-template #abpBody>
+        <div class="form-group">
+            <label class="mb-1">文件</label>
+            <input type="file" class="form-control" (change)="onFileChange($event)"
+                [accept]="acceptFileType[importFileType]" />
+        </div>
+        <div class="form-group mt-2">
+            <label for="import-mode mb-1">导入模式</label>
+            <select class="form-control form-select" id="import-mode" title="导入模式" [(ngModel)]="ImportMode">
+                <option [ngValue]="OverridingMode.Skip">跳过（Skip）</option>
+                <option [ngValue]="OverridingMode.Abort">取消（Abort）</option>
+                <option [ngValue]="OverridingMode.Overwrite">覆盖（Overwrite）</option>
+            </select>
+        </div>
+    </ng-template>
+    <ng-template #abpFooter>
+        <button type="button" class="btn btn-outline-primary" abpClose>
+            <i class="fa fa-xmark"></i>
+            取消操作
+        </button>
+        <button class="btn btn-primary" (click)="importFile()" [disabled]="importData.length === 0">
+            <i class="fa fa-check"></i>
+            开始导入
+        </button>
+    </ng-template>
+</abp-modal>

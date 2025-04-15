@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { WordsRoutingModule } from './words-routing.module';
 import { WordsComponent } from './words.component';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { WordsComponent } from './words.component';
   ],
   imports: [
     CommonModule,
-    WordsRoutingModule
+    WordsRoutingModule,
+    NgbNavModule
   ]
 })
 export class WordsModule { }
