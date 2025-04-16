@@ -22,11 +22,23 @@
                             <i class="fa fa-search me-2 ms-2"></i>
                         </button>
                     </div>
-                    <div *abpPermission="'Morpheme.Create'">
-                        <button id="create" class="btn btn-primary text-nowrap me-2" type="button" (click)="create()">
+                    <div ngbDropdown class="me-2" *abpPermission="'Morpheme.Create'">
+                        <button id="create" class="btn btn-primary text-nowrap dropdown-toggle" type="button"
+                            ngbDropdownToggle>
                             <i class="fa fa-plus me-1"></i>
                             <span>新建数据</span>
                         </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem (click)="create(1)">
+                                词根
+                            </button>
+                            <button ngbDropdownItem (click)="create(2)">
+                                前缀
+                            </button>
+                            <button ngbDropdownItem (click)="create(3)">
+                                后缀
+                            </button>
+                        </div>
                     </div>
                     <div *abpPermission="'Morpheme.Delete'">
                         <button id="delete" class="btn btn-danger text-nowrap me-2" type="button"
@@ -119,48 +131,81 @@
 
 <abp-modal [(visible)]="isModalOpen" [options]="{size: 'lg'}">
     <ng-template #abpHeader>
-        <h2>{{ currentDto.id ? '编辑词根词缀' : '新建词根词缀' }}</h2>
+        <h4>{{ currentDto.id ? '编辑' : '新建' }}{{getModelTitle()}}</h4>
     </ng-template>
 
     <ng-template #abpBody>
         <form [formGroup]="form" (ngSubmit)="save()">
-            <div class="row mb-2">
-                <div class="col">
-                    <label class="mb-1" for="morphemes-type">类型</label><span>*</span>
-                    <select id="morphemes-type" class="form-select" formControlName="type">
-                        <option *ngFor="let type of morphemeTypes" [value]="type.value">
-                            {{ type.label }}
-                        </option>
-                    </select>
-                </div>
-                <div class="col">
-                    <label class="mb-1" for="morphemes-value">
-                        值
-                    </label><span>*</span>
-                    <input type="text" id="morphemes-value" class="form-control" formControlName="value"
-                        (input)="form.controls['name'].setValue($event.target.value); form.controls['displayName'].setValue($event.target.value)" />
-                </div>
-                <div class="col">
-                    <label class="mb-1" for="morphemes-originLanguage">来源</label><span>*</span>
-                    <select id="morphemes-originLanguage" class="form-select" formControlName="originLanguage">
-                        <option *ngFor="let originLanguage of originLanguages" [value]="originLanguage">
-                            {{ originLanguage }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col">
-                    <label class="mb-1" for="morphemes-meaning">含义</label><span>*</span>
-                    <textarea id="morphemes-meaning" class="form-control" formControlName="meaning"></textarea>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col">
-                    <label class="mb-1" for="morphemes-description">备注</label>
-                    <textarea id="morphemes-description" class="form-control" formControlName="description"></textarea>
-                </div>
-            </div>
+            <ul ngbNav #nav="ngbNav" class="nav-tabs">
+                <li ngbNavItem>
+                    <button ngbNavLink>基本配置</button>
+                    <ng-template ngbNavContent>
+                        <div class="row my-2">
+                            <!-- <div class="col">
+                                <label class="mb-1" for="morphemes-type">类型</label><span>*</span>
+                                <select id="morphemes-type" class="form-select" formControlName="type">
+                                    <option *ngFor="let type of morphemeTypes" [value]="type.value">
+                                        {{ type.label }}
+                                    </option>
+                                </select>
+                            </div> -->
+                            <div class="col">
+                                <label class="mb-1" for="morphemes-value">
+                                    值
+                                </label><span>*</span>
+                                <input type="text" id="morphemes-value" class="form-control" formControlName="value"
+                                    (input)="form.controls['name'].setValue($event.target.value); form.controls['displayName'].setValue($event.target.value)" />
+                            </div>
+                            <div class="col">
+                                <label class="mb-1" for="morphemes-originLanguage">来源</label><span>*</span>
+                                <select id="morphemes-originLanguage" class="form-select"
+                                    formControlName="originLanguage">
+                                    <option *ngFor="let originLanguage of originLanguages" [value]="originLanguage">
+                                        {{ originLanguage }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label class="mb-1" for="morphemes-meaning">含义</label><span>*</span>
+                                <textarea id="morphemes-meaning" class="form-control"
+                                    formControlName="meaning"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label class="mb-1" for="morphemes-description">备注</label>
+                                <textarea id="morphemes-description" class="form-control"
+                                    formControlName="description"></textarea>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li ngbNavItem>
+                    <button ngbNavLink>示例关联</button>
+                    <ng-template ngbNavContent>
+                        <div class="my-2">
+                            <div formArrayName="examples">
+                                <div *ngFor="let example of examples.controls; let i = index" [formGroupName]="i"
+                                    class="example-item d-flex align-items-center mb-2">
+                                    <input type="text" class="form-control me-1" formControlName="word"
+                                        placeholder="关联单词" />
+                                    <input type="text" class="form-control me-1" formControlName="definition"
+                                        placeholder="释义" />
+                                    <input type="text" class="form-control me-1" formControlName="breakdown"
+                                        placeholder="分解" />
+                                    <button type="button" class="btn btn-outline-danger text-nowrap"
+                                        (click)="removeExample(i)">删除</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-success btn-sm text-nowrap" type="button"
+                                (click)="addExample()">添加关联单词</button>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav"></div>
         </form>
     </ng-template>
 

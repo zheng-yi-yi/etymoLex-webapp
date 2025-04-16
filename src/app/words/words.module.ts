@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { WordsRoutingModule } from './words-routing.module';
 import { WordsComponent } from './words.component';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -11,7 +11,7 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     WordsComponent
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     WordsRoutingModule,
     NgbNavModule
   ]

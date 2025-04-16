@@ -1,0 +1,57 @@
+.gradient-selector {
+    width: 100%; /* 宽度由父组件控制 */
+    height: 100%; /* 宽度由父组件控制 */
+    aspect-ratio: 4 / 1; /* 设置宽高比，保持圆角矩形比例 */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    transition: box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gradient-selector:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.gradient-picker-model {
+    position: fixed;
+    z-index: 1000;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px; /* 宽度继承父组件 */
+}
+
+.gradient-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); /* 自适应列布局 */
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.gradient-option {
+    width: 100%; /* 宽度自适应 */
+    aspect-ratio: 1 / 1; /* 保持圆形比例 */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.gradient-option:hover {
+    transform: scale(1.1);
+}
+
+.pagination-controls {
+    display: flex; /* 使用弹性布局 */
+    justify-content: space-between; /* 左右对齐 */
+    align-items: center; /* 垂直居中 */
+    margin-top: 10px; /* 与渐变选项分隔 */
+    gap: 10px; /* 按钮之间的间距 */
+    width: 100%; /* 确保容器占满宽度 */
+}

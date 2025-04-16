@@ -1,12 +1,81 @@
-<p>words works!</p>
-<ul ngbNav #nav="ngbNav" class="nav-tabs">
-    <li ngbNavItem>
-        <button ngbNavLink>First</button>
-        <ng-template ngbNavContent>First content</ng-template>
-    </li>
-    <li ngbNavItem>
-        <button ngbNavLink>Second</button>
-        <ng-template ngbNavContent>Second content</ng-template>
-    </li>
-</ul>
-<div [ngbNavOutlet]="nav"></div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>词库选择</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3 mb-4" *ngFor="let library of paginatedLibraries">
+                            <abp-card style="width: 100%;">
+                                <div
+                                    style="height: 150px; background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); display: flex; align-items: center; justify-content: center;">
+                                    <span style="color: #000000;">{{ library.name }}</span>
+                                </div>
+                                <abp-card-body>
+                                    <button abp-button="Primary" class="btn btn-primary w-100"
+                                        (click)="startLearning(library.id)">
+                                        开始学习
+                                    </button>
+                                </abp-card-body>
+                            </abp-card>
+                        </div>
+                    </div>
+                    <!-- 分页功能 -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item" [class.disabled]="currentPage === 1">
+                                    <button class="page-link" (click)="changePage(currentPage - 1)">上一页</button>
+                                </li>
+                                <li class="page-item" *ngFor="let page of totalPages"
+                                    [class.active]="page === currentPage">
+                                    <button class="page-link" (click)="changePage(page)">{{ page }}</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="currentPage === totalPages.length">
+                                    <button class="page-link" (click)="changePage(currentPage + 1)">下一页</button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="button" class="btn btn-outline-secondary w-100" (click)="showCreateLibraryModal()">
+                        新建词库
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<abp-modal [(visible)]="isCreateLibraryModalVisible">
+    <ng-template #abpHeader>
+        <h5>新建词库</h5>
+    </ng-template>
+
+    <ng-template #abpBody>
+        <form>
+            <div class="mb-3">
+                <label for="libraryName" class="form-label">名称</label>
+                <input type="text" class="form-control" id="libraryName">
+            </div>
+            <div class="mb-3">
+                <label for="libraryDescription" class="form-label">描述</label>
+                <textarea id="libraryDescription" class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <!-- 选择颜色 -->
+                <label for="libraryColor" class="form-label">封面颜色</label>
+                <div style="width: 100%; height: 50px;">
+                    <app-gradient-selector (gradientChange)="onGradientChange($event)"></app-gradient-selector>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #abpFooter>
+        <button type="button" class="btn btn-secondary" (click)="hideCreateLibraryModal()">取消</button>
+        <button type="button" class="btn btn-primary">保存</button>
+    </ng-template>
+</abp-modal>

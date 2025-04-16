@@ -1,0 +1,18 @@
+<div class="gradient-selector" (click)="togglePicker()" [style.background]="selectedGradient">
+</div>
+
+<div class="gradient-picker-model" *ngIf="isPickerVisible" [ngStyle]="pickerPosition">
+    <div class="gradient-picker">
+        <!-- 渐变色选择器 -->
+        <div class="gradient-option" *ngFor="let gradient of visibleGradients"
+            [ngStyle]="{'background-image': gradient}" (click)="selectGradient(gradient)">
+        </div>
+    </div>
+    <div class="pagination-controls">
+        <!-- 分页 -->
+        <abp-button class="ms-2 mb-2" iconClass="fas fa-angle-left" [disabled]="currentPage === 1"
+            (click)="goToPreviousPage()"></abp-button>
+        <abp-button class="me-2 mb-2" iconClass="fas fa-angle-right" [disabled]="currentPage === totalPages"
+            (click)="goToNextPage()"></abp-button>
+    </div>
+</div>

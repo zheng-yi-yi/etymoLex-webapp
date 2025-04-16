@@ -1,13 +1,13 @@
 import { ListService, LocalizationService, PagedResultDto, PermissionService } from '@abp/ng.core';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModelingBase } from '../shared/utils/modeling-base';
 import { MorphemeService } from '@proxy';
 import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
 import { FileType, MorphemeType } from '@proxy/enums';
 import { AppUtils } from '../shared/utils/app.utils';
 import { saveAs } from 'file-saver';
-import { CreateUpdateMorphemeDto, MorphemeDto, MorphemeGetListInput } from '@proxy/dtos/morpheme';
+import { CreateUpdateMorphemeDto, MorphemeDto, MorphemeExampleDto, MorphemeGetListInput } from '@proxy/dtos/morpheme';
 
 @Component({
   selector: 'app-morphemes',
@@ -35,6 +35,7 @@ export class MorphemesComponent
     '拉丁'
   ];
   searchFilterType: MorphemeType;
+  MorphemeType: MorphemeType;
 
   constructor(
     public readonly list: ListService<MorphemeGetListInput>,
@@ -71,11 +72,33 @@ export class MorphemesComponent
       value: [this.currentDto.value || '', Validators.required],
       originLanguage: [this.currentDto.originLanguage || '', Validators.required],
       meaning: [this.currentDto.meaning || '', Validators.required],
+      examples: this.fb.array(this.currentDto.examples?.map(example => this.createExampleFormGroup(example)) || []),
     });
   }
 
-  create() {
+  createExampleFormGroup(example?: MorphemeExampleDto): FormGroup {
+    return this.fb.group({
+      word: [example?.word || '', Validators.required],
+      definition: [example?.definition || '', Validators.required],
+      breakdown: [example?.breakdown || ''],
+    });
+  }
+
+  get examples(): FormArray {
+    return this.form.get('examples') as FormArray;
+  }
+
+  addExample() {
+    this.examples.push(this.createExampleFormGroup());
+  }
+
+  removeExample(index: number) {
+    this.examples.removeAt(index);
+  }
+
+  create(type) {
     this.currentDto = {} as MorphemeDto;
+    this.currentDto.type = type;
     this.buildForm();
     this.isModalOpen = true;
   }
@@ -211,5 +234,18 @@ export class MorphemesComponent
 
   onFilterTypeChange() {
     this.list.get();
+  }
+
+  getModelTitle() {
+    switch (this.currentDto.type) {
+      case MorphemeType.Root:
+        return '词根';
+      case MorphemeType.Prefix:
+        return '前缀';
+      case MorphemeType.Suffix:
+        return '后缀';
+      default:
+        return '';
+    }
   }
 }
